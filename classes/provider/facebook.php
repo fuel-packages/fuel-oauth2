@@ -2,8 +2,8 @@
 
 namespace OAuth2;
 
-class Facebook extends Provider
-{  
+class Provider_Facebook extends Provider {  
+	
 	public $name = 'facebook';
 
 	public $uid_key = 'uid';

@@ -9,6 +9,8 @@
  * @license    http://philsturgeon.co.uk/code/dbad-license
  */
 
+namespace OAuth2;
+
 abstract class Provider {
 
 	/**
@@ -23,7 +25,7 @@ abstract class Provider {
 	 */
 	public static function factory($name, array $options = NULL)
 	{	
-		$class = 'OAuth2\\Provider_'.ucfirst($name);
+		$class = 'OAuth2\\Provider_'.\Inflector::classify($name);
 		return new $class($options);
 	}
 
@@ -58,12 +60,10 @@ abstract class Provider {
 			$this->name = strtolower(substr(get_class($this), strlen('OAuth2\\Provider_')));
 		}
 		
-		foreach ($options as $key => $val)
-		{
-			$this->{$key} = $val;
-		}
+		$this->client_id = \Arr::get($options, 'id');
+		$this->client_secret = \Arr::get($options, 'secret');
+		$this->scope = \Arr::get($options, 'scope');
 		
-		// Set a default, which will be used if none are provided pre-request
 		$this->redirect_uri = \Uri::current();
 	}
 
@@ -105,18 +105,18 @@ abstract class Provider {
 	public function authorize($options = array())
 	{
 		$state = md5(uniqid(rand(), TRUE));
-		Session::set('state', $state);
+		\Session::set('state', $state);
 			
 		$params = array(
 			'client_id' => $this->client_id,
-			'redirect_uri' => isset($options['redirect_uri']) ? $options['redirect_uri'] : $this->redirect_uri,
+			'redirect_uri' => \Arr::get($options, 'redirect_uri', $this->redirect_uri),
 			'state' => $state,
 			'scope' => $this->scope,
 		);
 		
 		$url = $this->url_authorize().'?'.http_build_query($params);
 		
-		redirect($url);
+		\Response::redirect($url);
 	}
 
 	/*
@@ -129,8 +129,8 @@ abstract class Provider {
 	{
 		$params = array(
 			'client_id' => $this->client_id,
-			'redirect_uri' => isset($options['redirect_uri']) ? $options['redirect_uri'] : $this->redirect_uri,
 			'client_secret' => $this->client_secret,
+			'redirect_uri' => \Arr::get($options, 'redirect_uri', $this->redirect_uri),
 			'code' => $code,	
 		);
 		
