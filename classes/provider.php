@@ -125,7 +125,7 @@ abstract class Provider {
 	* @param	string	The access code
 	* @return	object	Success or failure along with the response details
 	*/	
-	public function access($code)
+	public function access($code, $options = array())
 	{
 		$params = array(
 			'client_id' => $this->client_id,

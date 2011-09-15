@@ -34,7 +34,7 @@ class Provider_Facebook extends Provider {
 			'name' => $user->name,
 			'location' => $user->hometown->name,
 			'description' => $user->bio,
-			'image' => 'http://graph.facebook.com/' . $user->id . '/picture?type=normal',
+			'image' => 'http://graph.facebook.com/'.$user->id.'/picture?type=normal',
 			'urls' => array(
 			  'Facebook' => $user->link,
 			),
