@@ -32,6 +32,7 @@ class Provider_Facebook extends Provider {
 		return array(
 			'nickname' => $user->username,
 			'name' => $user->name,
+			'email' => $user->email,
 			'location' => $user->hometown->name,
 			'description' => $user->bio,
 			'image' => 'http://graph.facebook.com/'.$user->id.'/picture?type=normal',
