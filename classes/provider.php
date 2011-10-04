@@ -115,6 +115,7 @@ abstract class Provider {
 			'client_id' => $this->client_id,
 			'redirect_uri' => \Arr::get($options, 'redirect_uri', $this->redirect_uri),
 			'state' => $state,
+			'response_type' => 'code',
 			'scope' => $this->scope,
 		);
 		
@@ -135,7 +136,8 @@ abstract class Provider {
 			'client_id' => $this->client_id,
 			'client_secret' => $this->client_secret,
 			'redirect_uri' => \Arr::get($options, 'redirect_uri', $this->redirect_uri),
-			'code' => $code,	
+			'code' => $code,
+			'response_type' => 'token',
 		);
 		
 		$url = $this->url_access_token().'?'.http_build_query($params);
