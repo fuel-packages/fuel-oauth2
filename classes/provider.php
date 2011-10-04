@@ -60,7 +60,11 @@ abstract class Provider {
 			$this->name = strtolower(substr(get_class($this), strlen('OAuth2\\Provider_')));
 		}
 		
-		$this->client_id = \Arr::get($options, 'id');
+		if ( ! $this->client_id = \Arr::get($options, 'id'))
+		{
+			throw new Exception('Required option not provided: id');
+		}
+		
 		$this->client_secret = \Arr::get($options, 'secret');
 		$this->scope = \Arr::get($options, 'scope');
 		
