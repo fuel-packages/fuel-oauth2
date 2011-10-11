@@ -22,7 +22,7 @@ http://example.com/auth/session/facebook
 ```php
 public function action_session($provider)
 {	
-	$provider = OAuth2_Provider::factory($provider, array(
+	$provider = OAuth2\Provider::factory($provider, array(
 		'client_id' => 'your-client-id',
 		'client_secret' => 'your-client-secret',
 	));
@@ -48,7 +48,7 @@ public function action_session($provider)
 			var_dump($user);
 		}
 		
-		catch (OAuth2_Exception $e)
+		catch (OAuth2\Exception $e)
 		{
 			show_error('That didnt work: '.$e);
 		}
