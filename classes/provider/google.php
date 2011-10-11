@@ -40,7 +40,9 @@ class Provider_Google extends Provider {
 			foreach($user->emails as $email)
 			{
 				if($email->primary)
+				{
 					$primary_email = $email->value;
+				}
 			}
 		}
 		else
@@ -59,9 +61,13 @@ class Provider_Google extends Provider {
 		foreach($user->urls as $url)
 		{
 			if(isset($url->type))
+			{
 				$urls[$url->type] = $url->value;
+			}
 			else
+			{
 				$urls[] = $url->value;
+			}
 		}
 		
 		// Create a response from the request
