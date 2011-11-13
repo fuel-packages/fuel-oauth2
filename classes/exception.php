@@ -9,7 +9,7 @@
 
 namespace OAuth2;
 
-class Exception extends Exception {
+class Exception extends \Exception {
 
 	/**
 	 * The result from the API server that represents the exception information.
@@ -43,7 +43,7 @@ class Exception extends Exception {
 			$message = 'Unknown Error.';
 		}
 
-		parent::__construct($message, $code);
+		parent::__construct($message, (int) $code);
 	}
 
 	/**
