@@ -5,8 +5,6 @@ namespace OAuth2;
 class Provider_Github extends Provider {  
 	
 	public $name = 'github';
-	
-	// https://api.github.com
 
 	public function url_authorize()
 	{

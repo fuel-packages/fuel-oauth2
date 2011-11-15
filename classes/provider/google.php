@@ -10,7 +10,7 @@ class Provider_Google extends Provider {
 	
 	public $method = 'POST';
 	
-	public $scope = 'https://www.googleapis.com/auth/plus.me ';
+	public $scope = 'https://www.googleapis.com/auth/plus.me';
 
 	public function url_authorize()
 	{
@@ -28,18 +28,17 @@ class Provider_Google extends Provider {
 			'access_token' => $token,
 		));
 		
-		
 		$user = json_decode(file_get_contents($url));
 		
-		//normalise email
+		// Normalise email
 		$primary_email = null;
 		
-		if(isset($user->emails))
+		if (isset($user->emails))
 		{
-			//sometimes the G+ api gives us the emails as an array
-			foreach($user->emails as $email)
+			// Sometimes the G+ api gives us the emails as an array
+			foreach ($user->emails as $email)
 			{
-				if($email->primary)
+				if ($email->primary)
 				{
 					$primary_email = $email->value;
 				}
@@ -56,11 +55,11 @@ class Provider_Google extends Provider {
 			$primary_email = $email_response->data->email;
 		}
 		
-		//normalise urls
+		// Normalise urls
 		$urls = null;
-		foreach($user->urls as $url)
+		foreach ($user->urls as $url)
 		{
-			if(isset($url->type))
+			if (isset($url->type))
 			{
 				$urls[$url->type] = $url->value;
 			}
