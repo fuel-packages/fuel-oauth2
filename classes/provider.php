@@ -38,16 +38,21 @@ abstract class Provider {
 	 * @var  string  uid key name
 	 */
 	public $uid_key = 'uid';
-
-	/**
-	 * @var  array  additional request parameters to be used for remote requests
-	 */
-	protected $params = array();
 	
 	/**
 	 * @var  string  scope separator, most use "," but some like Google are spaces
 	 */
 	public $scope_seperator = ',';
+
+	/**
+	 * @var  string  additional request parameters to be used for remote requests
+	 */
+	public $callback = null;
+
+	/**
+	 * @var  array  additional request parameters to be used for remote requests
+	 */
+	protected $params = array();
 	
 	/**
 	 * @var  string  the method to use when requesting tokens
@@ -73,6 +78,11 @@ abstract class Provider {
 		if ( ! $this->client_id = \Arr::get($options, 'id'))
 		{
 			throw new Exception('Required option not provided: id');
+		}
+		
+		if (isset($options['callback']))
+		{
+			$this->callback = $options['callback'];
 		}
 		
 		$this->client_secret = \Arr::get($options, 'secret');
