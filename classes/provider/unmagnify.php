@@ -6,6 +6,8 @@ class Provider_Unmagnify extends Provider {
 	
 	public $name = 'unmagnify';
 
+	protected $method = 'POST';
+
 	public function url_authorize()
 	{
 		return 'http://www.unmagnify.com/oauth2/authorize';

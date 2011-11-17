@@ -161,7 +161,7 @@ abstract class Provider {
 		$response = null;	
 		$url = $this->url_access_token();
 		
-		switch($this->method)
+		switch ($this->method)
 		{
 			case 'GET':
 				$url .= '?'.http_build_query($params);
@@ -190,8 +190,9 @@ abstract class Provider {
 				$context  = stream_context_create($opts);
 				$response = file_get_contents($url, false, $context);
 				
-				$params = get_object_vars(json_decode($response));
-				break;
+				$params = json_decode($response, TRUE);
+			break;
+				
 			default:
 				throw new \OutOfBoundsException("Method '{$this->method}' must be either GET or POST");
 		}
