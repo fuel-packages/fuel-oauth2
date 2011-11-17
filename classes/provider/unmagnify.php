@@ -10,30 +10,35 @@ class Provider_Unmagnify extends Provider {
 
 	public function url_authorize()
 	{
-		return 'http://www.unmagnify.com/oauth2/authorize';
+		return \Fuel::$env == \Fuel::DEVELOPMENT ? 'http://localhost:3000/oauth2/authorize' : 'https://www.unmagnify.com/oauth2/authorize';
 	}
 
 	public function url_access_token()
 	{
-		return 'http://www.unmagnify.com/oauth2/token';
+		return \Fuel::$env == \Fuel::DEVELOPMENT ? 'http://localhost:3000/oauth2/token' : 'https://www.unmagnify.com/oauth2/token';
 	}
 
 	public function get_user_info($token)
 	{
-		$url = 'http://www.unmagnify.com/me?'.http_build_query(array(
+		$url = 'http://localhost:3000/api/v1/me?'.http_build_query(array(
 		 	'access_token' => $token,
 		));
+		
+		$user = json_decode(file_get_contents($url), true);
 
 		// Create a response from the request
 		return array(
-			// 'nickname' => $user->login,
-			// 'name' => $user->name,
-			// 'email' => $user->email,
+			'nickname' => $user['username'],
+			'name' => $user['name'],
+			'description' => $user['bio'],
+			'location' => $user['location'],
+			'email' => $user['email'],
 			'urls' => array(
-				// 'Unmagnify' => 'http://unmagnify.com/'.$user->login,
+				'Unmagnify' => 'http://unmagnify.com/'.$user['username'],
+				'Website' => $user['website'],
 			),
 			'credentials' => array(
-				'uid' => $user->id,
+				'uid' => $user['username'],
 				'provider' => $this->name,
 				'token' => $token,
 			),
