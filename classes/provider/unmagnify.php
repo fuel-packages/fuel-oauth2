@@ -8,19 +8,19 @@ class Provider_Unmagnify extends Provider {
 
 	public function url_authorize()
 	{
-		return 'http://unmagnify.heroku.com/oauth2/authorize';
+		return 'http://www.unmagnify.com/oauth2/authorize';
 	}
 
 	public function url_access_token()
 	{
-		return 'http://unmagnify.heroku.com/oauth2/token';
+		return 'http://www.unmagnify.com/oauth2/token';
 	}
 
 	public function get_user_info($token)
 	{
-		// $url = 'https://api.github.com/user?'.http_build_query(array(
-		// 	'access_token' => $token,
-		// ));
+		$url = 'http://www.unmagnify.com/me?'.http_build_query(array(
+		 	'access_token' => $token,
+		));
 
 		// Create a response from the request
 		return array(
