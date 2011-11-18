@@ -9,6 +9,8 @@ class Provider_Google extends Provider {
 	public $uid_key = 'uid';
 	
 	public $method = 'POST';
+
+	public $scope_seperator = ' ';
 	
 	public $scope = 'https://www.googleapis.com/auth/plus.me';
 
@@ -20,6 +22,35 @@ class Provider_Google extends Provider {
 	public function url_access_token()
 	{
 		return 'https://accounts.google.com/o/oauth2/token';
+	}
+
+	/*
+	* Get an authorization code from Facebook.  Redirects to Facebook, which this redirects back to the app using the redirect address you've set.
+	*/	
+	public function authorize($options = array())
+	{
+		if (null === $this->scope or empty($this->scope))
+		{
+			throw new Exception('Required option not provided: scope');
+		}
+
+		parent::authorize($options);
+	}
+
+	/*
+	* Get access to the API
+	*
+	* @param	string	The access code
+	* @return	object	Success or failure along with the response details
+	*/	
+	public function access($code, $options = array())
+	{
+		if (null === $code)
+		{
+			throw new Exception('Expected Authorization Code from '.ucfirst($this->name).' is missing');
+		}
+
+		return parent::access($code, $options);
 	}
 
 	public function get_user_info($token)
