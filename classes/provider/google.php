@@ -24,6 +24,16 @@ class Provider_Google extends Provider {
 		return 'https://accounts.google.com/o/oauth2/token';
 	}
 
+	public function authorize($options = array())
+	{
+		if (null === $this->scope or empty($this->scope))
+		{
+			throw new Exception('Required option not provided: scope');
+		}
+		
+		parent::authorize($options);
+	}
+
 	public function get_user_info($token)
 	{
 		$url = 'https://www.googleapis.com/plus/v1/people/me?'.http_build_query(array(
