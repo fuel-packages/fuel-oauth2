@@ -50,7 +50,7 @@ class Provider_Google extends Provider {
 			throw new Exception('Expected Authorization Code from '.ucfirst($this->name).' is missing');
 		}
 
-		parent::access($code, $options);
+		return parent::access($code, $options);
 	}
 
 	public function get_user_info($token)
