@@ -9,6 +9,8 @@ class Provider_Google extends Provider {
 	public $uid_key = 'uid';
 	
 	public $method = 'POST';
+
+	public $scope_seperator = ' ';
 	
 	public $scope = 'https://www.googleapis.com/auth/plus.me';
 
