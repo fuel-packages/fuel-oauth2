@@ -183,7 +183,8 @@ abstract class Provider {
 				$opts = array(
 					'http' => array(
 						'method'  => 'POST',
-						'header'  => 'Content-type: application/x-www-form-urlencoded',
+						'header'  => 'Content-type: application/x-www-form-urlencoded\r\n'
+							."Content-Length: ".strlen($postdata)."\r\n",
 						'content' => $postdata
 					)
 				);
