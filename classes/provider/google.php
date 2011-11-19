@@ -11,8 +11,6 @@ class Provider_Google extends Provider {
 	public $method = 'POST';
 
 	public $scope_seperator = ' ';
-	
-	public $scope = 'https://www.googleapis.com/auth/plus.me';
 
 	public function url_authorize()
 	{
@@ -24,17 +22,21 @@ class Provider_Google extends Provider {
 		return 'https://accounts.google.com/o/oauth2/token';
 	}
 
-	/*
-	* Get an authorization code from Facebook.  Redirects to Facebook, which this redirects back to the app using the redirect address you've set.
-	*/	
-	public function authorize($options = array())
-	{
-		if (null === $this->scope or empty($this->scope))
-		{
-			throw new Exception('Required option not provided: scope');
-		}
 
-		parent::authorize($options);
+	public function __construct(array $options = array())
+	{
+		// Now make sure we have the default scope to get user data
+		$options['scope'] = \Arr::merge(
+			
+			// We need this default feed to get the authenticated users basic information
+			// array('https://www.googleapis.com/auth/plus.me'),
+			array('https://www.google.com/m8/feeds'),
+			
+			// And take either a string and array it, or empty array to merge into
+			(array) \Arr::get($options, 'scope', array())
+		);
+		
+		parent::__construct($options);
 	}
 
 	/*
@@ -55,17 +57,52 @@ class Provider_Google extends Provider {
 
 	public function get_user_info($token)
 	{
+		$url = 'https://www.google.com/m8/feeds/contacts/default/full?max-results=1&alt=json&'.http_build_query(array(
+			'access_token' => $token,
+		));
+		
+		$response = json_decode(file_get_contents($url), true);
+		
+		// Fetch data parts
+		$email = \Arr::get($response, 'feed.id.$t');
+		$name = \Arr::get($response, 'feed.author.0.name.$t');
+		$name == '(unknown)' and $name = $email;
+		
+		return array(
+			'nickname' => \Inflector::friendly_title($name),
+			'name' => $name,
+			'email' => $email,
+			'location' => null,
+			'image' => null,
+			'description' => null,
+			'urls' => array(),
+			'credentials' => array(
+				'uid' => $email,
+				'provider' => $this->name,
+				'token' => $token,
+			),
+		);
+		
+		
+		/*
+		
+		This code was taken from somewhere and in theory perfect as we don't need access to all their contacts
+		but in reality the likelyhood that a user has Google Plus is quite low so this just doesn't work.
+		If there is a more generic way to get peoples basic data with lower requirements then please send a pull request!
+			- Phil
+		
 		$url = 'https://www.googleapis.com/plus/v1/people/me?'.http_build_query(array(
 			'access_token' => $token,
 		));
 		
-		$user = json_decode(file_get_contents($url));
-		
-		// Normalise email
 		$primary_email = null;
 		
-		if (isset($user->emails))
+		$user = json_decode(@file_get_contents($url));
+			
+		// See if we got any emails from Google+
+		if ( ! empty($user->emails))
 		{
+			
 			// Sometimes the G+ api gives us the emails as an array
 			foreach ($user->emails as $email)
 			{
@@ -115,5 +152,6 @@ class Provider_Google extends Provider {
 				'token' => $token,
 			),
 		);
+		*/
 	}
 }

@@ -67,7 +67,7 @@ abstract class Provider {
 	 * @param   array   provider options
 	 * @return  void
 	 */
-	public function __construct(array $options = NULL)
+	public function __construct(array $options = array())
 	{
 		if ( ! $this->name)
 		{
@@ -80,11 +80,7 @@ abstract class Provider {
 			throw new Exception('Required option not provided: id');
 		}
 		
-		if (isset($options['callback']))
-		{
-			$this->callback = $options['callback'];
-		}
-		
+		$this->callback = \Arr::get($options, 'callback');
 		$this->client_secret = \Arr::get($options, 'secret');
 		$this->scope = \Arr::get($options, 'scope');
 		
@@ -183,8 +179,7 @@ abstract class Provider {
 				$opts = array(
 					'http' => array(
 						'method'  => 'POST',
-						'header'  => 'Content-type: application/x-www-form-urlencoded\r\n'
-							."Content-Length: ".strlen($postdata)."\r\n",
+						'header'  => 'Content-type: application/x-www-form-urlencoded',
 						'content' => $postdata
 					)
 				);
