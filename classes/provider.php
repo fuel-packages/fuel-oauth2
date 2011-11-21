@@ -17,13 +17,13 @@ abstract class Provider {
 	 * Create a new provider.
 	 *
 	 *     // Load the Twitter provider
-	 *     $provider = OAuth_Provider::factory('twitter');
+	 *     $provider = OAuth_Provider::forge('twitter');
 	 *
 	 * @param   string   provider name
 	 * @param   array    provider options
 	 * @return  OAuth_Provider
 	 */
-	public static function factory($name, array $options = NULL)
+	public static function forge($name, array $options = null)
 	{	
 		$class = 'OAuth2\\Provider_'.\Inflector::classify($name);
 		return new $class($options);
@@ -160,33 +160,28 @@ abstract class Provider {
 		switch ($this->method)
 		{
 			case 'GET':
+			
 				$url .= '?'.http_build_query($params);
 				$response = file_get_contents($url);
 				
 				parse_str($response, $params); 
-				break;
+			
+			break;
 				
 			case 'POST':
-				//maybe switch to use curl?
-				/*
-				$curl = \Rest::forge('oauth2', array(
-					'server' => $url,
-					'method' => 'curl'
-				));
-				$response = $curl->post('', $params);*/
 				
-				$postdata = http_build_query($params);
-				$opts = array(
+				$context = stream_context_create(array(
 					'http' => array(
 						'method'  => 'POST',
 						'header'  => 'Content-type: application/x-www-form-urlencoded',
-						'content' => $postdata
+						'content' => http_build_query($params)
 					)
-				);
-				$context  = stream_context_create($opts);
+				));
+				
 				$response = file_get_contents($url, false, $context);
 				
 				$params = json_decode($response, TRUE);
+				
 			break;
 				
 			default:
@@ -198,7 +193,7 @@ abstract class Provider {
 			throw new Exception($params);
 		}
 		
-		return $params;
+		return Token::forge($params);
 	}
 
 }

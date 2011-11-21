@@ -23,6 +23,8 @@ Autoloader::add_classes(array(
 	
 	'OAuth2\\Request'  				=> __DIR__.'/classes/request.php',
 	
+	'OAuth2\\Token'  				=> __DIR__.'/classes/token.php',
+	
 ));
 
 

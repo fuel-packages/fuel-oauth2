@@ -18,16 +18,17 @@ class Provider_Unmagnify extends Provider {
 		return \Fuel::$env == \Fuel::DEVELOPMENT ? 'http://localhost:3000/oauth2/token' : 'https://www.unmagnify.com/oauth2/token';
 	}
 
-	public function get_user_info($token)
+	public function get_user_info(Token $token)
 	{
 		$url = 'http://localhost:3000/api/v1/me?'.http_build_query(array(
-		 	'access_token' => $token,
+		 	'access_token' => $token->access_token,
 		));
 		
 		$user = json_decode(file_get_contents($url), true);
 
 		// Create a response from the request
 		return array(
+			'uid' => $user['username'],
 			'nickname' => $user['username'],
 			'name' => $user['name'],
 			'description' => $user['bio'],
@@ -36,11 +37,6 @@ class Provider_Unmagnify extends Provider {
 			'urls' => array(
 				'Unmagnify' => 'http://unmagnify.com/'.$user['username'],
 				'Website' => $user['website'],
-			),
-			'credentials' => array(
-				'uid' => $user['username'],
-				'provider' => $this->name,
-				'token' => $token,
 			),
 		);
 	}

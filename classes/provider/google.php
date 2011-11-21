@@ -22,7 +22,6 @@ class Provider_Google extends Provider {
 		return 'https://accounts.google.com/o/oauth2/token';
 	}
 
-
 	public function __construct(array $options = array())
 	{
 		// Now make sure we have the default scope to get user data
@@ -55,10 +54,10 @@ class Provider_Google extends Provider {
 		return parent::access($code, $options);
 	}
 
-	public function get_user_info($token)
+	public function get_user_info(Token $token)
 	{
 		$url = 'https://www.google.com/m8/feeds/contacts/default/full?max-results=1&alt=json&'.http_build_query(array(
-			'access_token' => $token,
+			'access_token' => $token->access_token,
 		));
 		
 		$response = json_decode(file_get_contents($url), true);
@@ -69,6 +68,7 @@ class Provider_Google extends Provider {
 		$name == '(unknown)' and $name = $email;
 		
 		return array(
+			'uid' => $email,
 			'nickname' => \Inflector::friendly_title($name),
 			'name' => $name,
 			'email' => $email,
@@ -76,82 +76,6 @@ class Provider_Google extends Provider {
 			'image' => null,
 			'description' => null,
 			'urls' => array(),
-			'credentials' => array(
-				'uid' => $email,
-				'provider' => $this->name,
-				'token' => $token,
-			),
 		);
-		
-		
-		/*
-		
-		This code was taken from somewhere and in theory perfect as we don't need access to all their contacts
-		but in reality the likelyhood that a user has Google Plus is quite low so this just doesn't work.
-		If there is a more generic way to get peoples basic data with lower requirements then please send a pull request!
-			- Phil
-		
-		$url = 'https://www.googleapis.com/plus/v1/people/me?'.http_build_query(array(
-			'access_token' => $token,
-		));
-		
-		$primary_email = null;
-		
-		$user = json_decode(@file_get_contents($url));
-			
-		// See if we got any emails from Google+
-		if ( ! empty($user->emails))
-		{
-			
-			// Sometimes the G+ api gives us the emails as an array
-			foreach ($user->emails as $email)
-			{
-				if ($email->primary)
-				{
-					$primary_email = $email->value;
-				}
-			}
-		}
-		else
-		{
-			//if we dont get the email from G+, get it from the google API.
-			$email_url = 'https://www.googleapis.com/userinfo/email?alt=json&'.http_build_query(array(
-				'access_token' => $token,
-			));
-			$email_response = json_decode(file_get_contents($email_url));
-			
-			$primary_email = $email_response->data->email;
-		}
-		
-		// Normalise urls
-		$urls = null;
-		foreach ($user->urls as $url)
-		{
-			if (isset($url->type))
-			{
-				$urls[$url->type] = $url->value;
-			}
-			else
-			{
-				$urls[] = $url->value;
-			}
-		}
-		
-		// Create a response from the request
-		return array(
-			'nickname' => $user->displayName,
-			'name' => $user->displayName,
-			'email' => $primary_email,
-			'location' => null,
-			'description' => $user->aboutMe,
-			'image' => $user->image->url,
-			'urls' => $urls,
-			'credentials' => array(
-				'uid' => $user->id,
-				'provider' => $this->name,
-				'token' => $token,
-			),
-		);
-		*/
 	}
 }

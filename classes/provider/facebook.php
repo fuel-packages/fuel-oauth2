@@ -20,16 +20,17 @@ class Provider_Facebook extends Provider {
 		return 'https://graph.facebook.com/oauth/access_token';
 	}
 
-	public function get_user_info($token)
+	public function get_user_info(Token $token)
 	{
 		$url = 'https://graph.facebook.com/me?'.http_build_query(array(
-			'access_token' => $token,
+			'access_token' => $token->access_token,
 		));
 
 		$user = json_decode(file_get_contents($url));
 
 		// Create a response from the request
 		return array(
+			'uid' => $user->id,
 			'nickname' => $user->username,
 			'name' => $user->name,
 			'email' => $user->email,
@@ -38,11 +39,6 @@ class Provider_Facebook extends Provider {
 			'image' => 'http://graph.facebook.com/'.$user->id.'/picture?type=normal',
 			'urls' => array(
 			  'Facebook' => $user->link,
-			),
-			'credentials' => array(
-				'uid' => $user->id,
-				'provider' => $this->name,
-				'token' => $token,
 			),
 		);
 	}
