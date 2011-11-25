@@ -46,9 +46,9 @@ class Provider_Google extends Provider {
 	*/	
 	public function access($code, $options = array())
 	{
-		if (null === $code)
+		if ($code === null)
 		{
-			throw new Exception('Expected Authorization Code from '.ucfirst($this->name).' is missing');
+			throw new Exception(array('message' => 'Expected Authorization Code from '.ucfirst($this->name).' is missing'));
 		}
 
 		return parent::access($code, $options);
