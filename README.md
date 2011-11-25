@@ -1,6 +1,6 @@
-# Fuel oAuth2
+# Fuel OAuth2
 
-Authorize users with your application in a driver-base fashion meaning one implementation works for multiple oAuth 2 providers.
+Authorize users with your application in a driver-base fashion meaning one implementation works for multiple OAuth 2 providers.
 
 Note that this Cell ONLY provides the authorization mechanism. You will need to implement the example controller so you can save this information to make API requests on the users behalf.
 
@@ -8,12 +8,13 @@ Note that this Cell ONLY provides the authorization mechanism. You will need to 
 
 - Facebook
 - GitHub
+- Google
+- Unmagnify
+- YouTube
 
 ## TODO
 
-This is just a prototype and so far only works with Facebook, meaning beyond implementing more providers it might just not work with others, so refactoring is going to be important. 
-
-Also, requests need to be WAY more bullet-proof, but there is no generic Request class in Fuel, which is something else that needs to be worked on.
+Requests need to be WAY more bullet-proof, but there is no generic Request class in Fuel, which is something else that needs to be worked on.
 
 ## Usage Example
 
@@ -38,9 +39,13 @@ public function action_session($provider)
 		// Howzit?
 		try
 		{
-			$params = $provider->access($_GET['code']);
+			$token = $provider->access($_GET['code']);
 			
-			$user = $provider->get_user_info($params['access_token']);
+			// Save access_token for now
+			Session::set('access_token', $token->access_token);
+			
+			// Use that to grab basic data about the user
+			$user = $provider->get_user_info($token);
 			
 			// Here you should use this information to A) look for a user B) help a new user sign up with existing data.
 			// If you store it all in a cookie and redirect to a registration page this is crazy-simple.

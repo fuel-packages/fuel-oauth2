@@ -8,7 +8,7 @@ class Provider_Facebook extends Provider {
 
 	public $uid_key = 'uid';
 	
-	public $scope = 'email,read_stream';
+	public $scope = array('email', 'read_stream');
 
 	public function url_authorize()
 	{

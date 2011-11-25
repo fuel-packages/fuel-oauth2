@@ -149,38 +149,58 @@ abstract class Provider {
 		$params = array(
 			'client_id' 	=> $this->client_id,
 			'client_secret' => $this->client_secret,
-			'redirect_uri' 	=> \Arr::get($options, 'redirect_uri', $this->redirect_uri),
-			'code' 			=> $code,
-			'grant_type' 	=> 'authorization_code'
+			'grant_type' 	=> \Arr::get($options, 'grant_type', 'authorization_code'),
 		);
+	
+		switch ($params['grant_type'])
+		{
+			case 'authorization_code':
+				$params['code'] = $code;
+				$params['redirect_uri'] = \Arr::get($options, 'redirect_uri', $this->redirect_uri);
+			break;
+			
+			case 'refresh_token':
+				$params['refresh_token'] = $code;
+			break;
+		}
+		
 	
 		$response = null;	
 		$url = $this->url_access_token();
+		
+		// Get ready to make a request
+		$request = \Request::forge($url, 'curl');
+		
+		$request->set_params($params);
 		
 		switch ($this->method)
 		{
 			case 'GET':
 			
+				// Need to switch to Request library, but need to test it on one that works
 				$url .= '?'.http_build_query($params);
 				$response = file_get_contents($url);
 				
-				parse_str($response, $params); 
+				parse_str($response, $body); 
 			
 			break;
 				
 			case 'POST':
 				
-				$context = stream_context_create(array(
-					'http' => array(
-						'method'  => 'POST',
-						'header'  => 'Content-type: application/x-www-form-urlencoded',
-						'content' => http_build_query($params)
-					)
-				));
+				try
+				{
+					$request->set_header('Accept', 'application/json');
+					$request->set_method('POST');
+					$request = $request->execute();
+				}
+				catch (RequestException $e)
+				{
+					\Debug::dump($request->response());
+					exit;
+				}
 				
-				$response = file_get_contents($url, false, $context);
+				$body = $request->response()->body();
 				
-				$params = json_decode($response, TRUE);
 				
 			break;
 				
@@ -188,12 +208,12 @@ abstract class Provider {
 				throw new \OutOfBoundsException("Method '{$this->method}' must be either GET or POST");
 		}
 		
-		if (isset($params['error']))
+		if (isset($body['error']))
 		{
-			throw new Exception($params);
+			throw new \Exception($body);
 		}
 		
-		return Token::forge($params);
+		return Token::forge($body);
 	}
 
 }
