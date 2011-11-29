@@ -189,7 +189,7 @@ abstract class Provider {
 				
 				try
 				{
-					// $request->set_header('Accept', 'application/json');
+					$request->set_header('Accept', 'application/json');
 					$request->set_method('POST');
 					$request = $request->execute();
 				}
@@ -204,9 +204,12 @@ abstract class Provider {
 					exit;
 				}
 			
-				$body = $request->response()->body();
+				$response = $request->response();
 				
-				\Log::debug('Access token body: '.print_r($body, true));
+				logger(\Fuel::L_INFO, 'Access token response: '.print_r($body, true), __METHOD__);
+				
+				// Try to get the actual response, its hopefully an array
+				$body = $response->body();
 				
 			break;
 				
