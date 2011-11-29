@@ -169,9 +169,9 @@ abstract class Provider {
 		$url = $this->url_access_token();
 		
 		// Get ready to make a request
-		$request = \Request::forge($url, 'curl');
-		
-		$request->set_params($params);
+		// $request = \Request::forge($url, 'curl');
+		// 
+		// $request->set_params($params);
 		
 		switch ($this->method)
 		{
@@ -187,6 +187,21 @@ abstract class Provider {
 				
 			case 'POST':
 				
+				$postdata = http_build_query($params);
+				$opts = array(
+					'http' => array(
+						'method'  => 'POST',
+						'header'  => 'Content-type: application/x-www-form-urlencoded',
+						'content' => $postdata
+					)
+				);
+				$context  = stream_context_create($opts);
+				$response = file_get_contents($url, false, $context);
+
+				$params = get_object_vars(json_decode($response));
+				
+				/*
+				Fuck the request class
 				try
 				{
 					$request->set_header('Accept', 'application/json');
@@ -210,6 +225,7 @@ abstract class Provider {
 				
 				// Try to get the actual response, its hopefully an array
 				$body = $response->body();
+				*/
 				
 			break;
 				
@@ -217,12 +233,12 @@ abstract class Provider {
 				throw new \OutOfBoundsException("Method '{$this->method}' must be either GET or POST");
 		}
 		
-		if (isset($body['error']))
+		if (isset($params['error']))
 		{
-			throw new \Exception($body);
+			throw new \Exception($params);
 		}
 		
-		return Token::forge($body);
+		return Token::forge($params);
 	}
 
 }
