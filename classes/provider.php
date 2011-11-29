@@ -198,7 +198,12 @@ abstract class Provider {
 					\Debug::dump($request->response());
 					exit;
 				}
-				
+				catch (HttpNotFoundException $e)
+				{
+					\Debug::dump($request->response());
+					exit;
+				}
+			
 				$body = $request->response()->body();
 				
 				
