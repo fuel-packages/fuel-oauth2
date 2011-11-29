@@ -206,6 +206,7 @@ abstract class Provider {
 			
 				$body = $request->response()->body();
 				
+				\Log::debug('Access token body: '.print_r($body, true));
 				
 			break;
 				
