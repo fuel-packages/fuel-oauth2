@@ -7,20 +7,33 @@ class Provider_Unmagnify extends Provider {
 	public $name = 'unmagnify';
 
 	protected $method = 'POST';
+	
+	protected $site = 'https://www.unmagnify.com';
+	
+	public function __construct(array $options = array())
+	{
+		parent::__construct($options);
+		
+		// Developing? Talk to the local server
+		if (\Fuel::$env == \Fuel::DEVELOPMENT)
+		{
+			$this->site = 'http://localhost:3000';
+		}
+	}
 
 	public function url_authorize()
 	{
-		return \Fuel::$env == \Fuel::DEVELOPMENT ? 'http://localhost:3000/oauth2/authorize' : 'https://www.unmagnify.com/oauth2/authorize';
+		return $this->site.'/oauth2/authorize';
 	}
 
 	public function url_access_token()
 	{
-		return \Fuel::$env == \Fuel::DEVELOPMENT ? 'http://localhost:3000/oauth2/token' : 'https://www.unmagnify.com/oauth2/token';
+		return $this->site.'/oauth2/token';
 	}
 
 	public function get_user_info(Token $token)
 	{
-		$url = 'http://localhost:3000/api/v1/me?'.http_build_query(array(
+		$url = $this->site.'/api/v1/me?'.http_build_query(array(
 		 	'access_token' => $token->access_token,
 		));
 		
