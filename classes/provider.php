@@ -189,7 +189,7 @@ abstract class Provider {
 				
 				try
 				{
-					$request->set_header('Accept', 'application/json');
+					// $request->set_header('Accept', 'application/json');
 					$request->set_method('POST');
 					$request = $request->execute();
 				}
