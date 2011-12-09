@@ -77,7 +77,7 @@ abstract class Provider {
 		
 		if ( ! $this->client_id = \Arr::get($options, 'id'))
 		{
-			throw new Exception('Required option not provided: id');
+			throw new Exception(array('message' => 'Required option not provided: id'));
 		}
 		
 		$this->callback = \Arr::get($options, 'callback');
