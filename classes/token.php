@@ -10,73 +10,22 @@
 
 namespace OAuth2;
 
-class Token {
+abstract class Token {
 
 	/**
 	 * Create a new token object.
 	 *
-	 *     $token = Token::forge($name);
+	 *     $token = Token::forge('access', $name);
 	 *
 	 * @param   string  token type
 	 * @param   array   token options
 	 * @return  Token
 	 */
-	public static function forge(array $options = null)
+	public static function forge($type = 'access', array $options = null)
 	{
-		return new static($options);
-	}
+		$class = '\\OAuth2\\Token_'.\Inflector::classify($type);
 
-	/**
-	 * @var  string  access_token
-	 */
-	protected $access_token;
-
-	/**
-	 * @var  int  expires
-	 */
-	protected $expires;
-
-	/**
-	 * @var  string  refresh_token
-	 */
-	protected $refresh_token;
-
-	/**
-	 * @var  string  uid
-	 */
-	protected $uid;
-
-	/**
-	 * Sets the token, expiry, etc values.
-	 *
-	 * @param   array   token options
-	 * @return  void
-	 */
-	public function __construct(array $options)
-	{
-		if ( ! isset($options['access_token']))
-		{
-			throw new Exception(array('message' => 'Required option not passed: access_token'.PHP_EOL.print_r($options, true)));
-		}
-		
-		if ( ! isset($options['expires_in']) and ! isset($options['expires']))
-		{
-			throw new Exception(array('message' => 'We do not know when this access_token will expire'));
-		}
-
-		$this->access_token = $options['access_token'];
-		
-		// Some providers (not many) give the uid here, so lets take it
-		\Arr::get($options, 'uid') and $this->uid = $options['uid'];
-		
-		// We need to know when the token expires, add num. seconds to current time
-		\Arr::get($options, 'expires_in') and $this->expires = time() + ((int) $options['expires_in']);
-		
-		// Facebook is just being a spec ignoring jerk
-		\Arr::get($options, 'expires') and $this->expires = time() + ((int) $options['expires']);
-		
-		// Grab a refresh token so we can update access tokens when they expires
-		\Arr::get($options, 'refresh_token') and $this->refresh_token = $options['refresh_token'];
+		return new $class($options);
 	}
 
 	/**

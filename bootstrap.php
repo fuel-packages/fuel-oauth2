@@ -24,6 +24,8 @@ Autoloader::add_classes(array(
 	'OAuth2\\Request'  				=> __DIR__.'/classes/request.php',
 	
 	'OAuth2\\Token'  				=> __DIR__.'/classes/token.php',
+	'OAuth2\\Token_Access'  		=> __DIR__.'/classes/token/access.php',
+	'OAuth2\\Token_Authorize'		=> __DIR__.'/classes/token/authorize.php',
 	
 ));
 

@@ -181,7 +181,7 @@ abstract class Provider {
 				$url .= '?'.http_build_query($params);
 				$response = file_get_contents($url);
 				
-				parse_str($response, $body); 
+				parse_str($response, $return); 
 			
 			break;
 				
@@ -198,7 +198,7 @@ abstract class Provider {
 				$context  = stream_context_create($opts);
 				$response = file_get_contents($url, false, $context);
 
-				$params = get_object_vars(json_decode($response));
+				$return = get_object_vars(json_decode($response));
 				
 				/*
 				Fuck the request class
@@ -228,17 +228,26 @@ abstract class Provider {
 				*/
 				
 			break;
-				
+			
 			default:
 				throw new \OutOfBoundsException("Method '{$this->method}' must be either GET or POST");
 		}
 		
-		if (isset($params['error']))
+		if (isset($return['error']))
 		{
-			throw new \Exception($params);
+			throw new Exception($return);
 		}
 		
-		return Token::forge($params);
+		switch ($params['grant_type'])
+		{
+			case 'authorization_code':
+				return Token::forge('access', $return);
+			break;
+
+			case 'refresh_token':
+				return Token::forge('refresh', $return);
+			break;
+		}
 	}
 
 }
