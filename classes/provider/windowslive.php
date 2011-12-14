@@ -2,7 +2,7 @@
 
 namespace OAuth2;
 
-class OAuth2_Provider_Windowslive extends OAuth2_Provider
+class Provider_Windowslive extends Provider
 {
 	public $name = 'windowslive';
 	
