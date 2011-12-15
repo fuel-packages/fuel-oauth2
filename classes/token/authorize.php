@@ -30,12 +30,12 @@ class Token_Authorize extends Token
 	{
 		if ( ! isset($options['code']))
 	    {
-            throw new Exception('Required option not passed: code');
+            throw new Exception(array('message' => 'Required option not passed: code'));
         }
 
         elseif ( ! isset($options['redirect_uri']))
         {
-            throw new Exception('Required option not passed: redirect_uri');
+            throw new Exception(array('message' => 'Required option not passed: redirect_uri'));
         }
 		
 		$this->code = $options['code'];
