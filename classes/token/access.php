@@ -33,6 +33,11 @@ class Token_Access extends Token
 	protected $uid;
 
 	/**
+	 * @var  mixed  user
+	 */
+	protected $user;
+
+	/**
 	 * Sets the token, expiry, etc values.
 	 *
 	 * @param   array   token options
@@ -42,7 +47,7 @@ class Token_Access extends Token
 	{
 		if ( ! isset($options['access_token']))
 		{
-			throw new Exception('Required option not passed: access_token'.PHP_EOL.print_r($options, true));
+			throw new Exception(array('message' => 'Required option not passed: access_token'.PHP_EOL.print_r($options, true)));
 		}
 		
 		// if ( ! isset($options['expires_in']) and ! isset($options['expires']))
@@ -54,6 +59,9 @@ class Token_Access extends Token
 		
 		// Some providers (not many) give the uid here, so lets take it
 		isset($options['uid']) and $this->uid = $options['uid'];
+
+		// Some providers (not many) give the user here, so lets take it
+		isset($options['user']) and $this->user = $options['user'];
 		
 		// We need to know when the token expires, add num. seconds to current time
 		isset($options['expires_in']) and $this->expires = time() + ((int) $options['expires_in']);
