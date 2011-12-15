@@ -10,6 +10,7 @@ Note that this Cell ONLY provides the authorization mechanism. You will need to 
 - Foursquare
 - GitHub
 - Google
+- Instagram
 - Unmagnify
 - Windows Live
 - YouTube
