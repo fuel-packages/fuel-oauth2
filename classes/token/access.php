@@ -47,7 +47,7 @@ class Token_Access extends Token
 	{
 		if ( ! isset($options['access_token']))
 		{
-			throw new Exception('Required option not passed: access_token'.PHP_EOL.print_r($options, true));
+			throw new Exception(array('message' => 'Required option not passed: access_token'.PHP_EOL.print_r($options, true)));
 		}
 		
 		// if ( ! isset($options['expires_in']) and ! isset($options['expires']))
