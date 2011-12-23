@@ -26,8 +26,8 @@ http://example.com/auth/session/facebook
 ```php
 public function action_session($provider)
 {	
-	$provider = OAuth2\Provider::factory($provider, array(
-		'client_id' => 'your-client-id',
+	$provider = OAuth2\Provider::forge($provider, array(
+		'id' => 'your-id',
 		'client_secret' => 'your-client-secret',
 	));
 
