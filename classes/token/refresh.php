@@ -7,20 +7,15 @@
  * @author     Phil Sturgeon
  * @copyright  (c) 2011 HappyNinjas Ltd
  */
- 
+
 namespace OAuth2;
 
-class Token_Authorize extends Token
+class Token_Refresh extends Token
 {
 	/**
 	 * @var  string  code
 	 */
 	protected $code;
-
-	/**
-	 * @var  string  redirect_uri
-	 */
-	protected $redirect_uri;
 
 	/**
 	 * Sets the token, expiry, etc values.
@@ -31,17 +26,11 @@ class Token_Authorize extends Token
 	public function __construct(array $options)
 	{
 		if ( ! isset($options['code']))
-	    {
-            throw new Exception(array('message' => 'Required option not passed: code'));
-        }
-
-        elseif ( ! isset($options['redirect_uri']))
-        {
-            throw new Exception(array('message' => 'Required option not passed: redirect_uri'));
-        }
+		{
+			throw new Exception(array('message' => 'Required option not passed: code'));
+		}
 		
 		$this->code = $options['code'];
-		$this->redirect_uri = $options['redirect_uri'];
 	}
 
 	/**
