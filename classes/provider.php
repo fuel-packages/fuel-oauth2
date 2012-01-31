@@ -135,12 +135,11 @@ abstract class Provider {
 			'response_type' 	=> 'code',
 		);
 		
-		//thanks google. you're awesome. required to get a refresh_token
+		//thanks google. you're awesome. both are required to get a refresh_token
 		switch ($this->name)
 		{
 			case 'google':
-				
-				$params += array('access_type' => 'offline');
+				$params += array('access_type' => 'offline', 'approval_prompt'=>'force');
 				break;
 		}
 		
@@ -249,16 +248,8 @@ abstract class Provider {
 			throw new Exception($return);
 		}
 		
-		switch ($params['grant_type'])
-		{
-			case 'authorization_code':
-				return Token::forge('access', $return);
-			break;
-
-			case 'refresh_token':
-				return Token::forge('refresh', $return);
-			break;
-		}
+		return Token::forge('access', $return);
+		
 	}
 
 }
