@@ -2,10 +2,10 @@
 /**
  * OAuth Provider
  *
- * @package    CodeIgniter/OAuth
+ * @package    FuelPHP/OAuth2
  * @category   Provider
  * @author     Phil Sturgeon
- * @copyright  Phil Sturgeon
+ * @copyright  (c) 2012 HappyNinjas Ltd
  * @license    http://philsturgeon.co.uk/code/dbad-license
  */
 
