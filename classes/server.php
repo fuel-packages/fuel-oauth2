@@ -235,7 +235,7 @@ class Server {
 		return (bool) $this->model->get_scope($scope);
 	}
 	
-	public function get_scope($scopes)
+	public function get_scope($scope)
 	{
 		return $this->model->get_scope($scope);	
 	}
@@ -255,28 +255,12 @@ class Server {
 	{
 		if (strstr($redirect_uri, $query_delimeter))
 		{
-			$redirect_uri = $redirect_uri . http_build_query($params);
+			return $redirect_uri . http_build_query($params);
 		}
 		else
 		{
-			$redirect_uri = $redirect_uri . $query_delimeter . http_build_query($params);
+			return $redirect_uri . $query_delimeter . http_build_query($params);
 		}
-		
-		return $redirect_uri;
-	}
-
-		
-	/**
-	 * Sign the user into your application.
-	 *
-	 * Edit this function to suit your needs. It must return a user's id as a string
-	 * or FALSE if the sign in was incorrect
-	 * 
-	 * @return string|bool
-	 */
-	public function validate_user($username = "", $password = "")
-	{
-		$this->model->validate_user($username, $password);
 	}
 		
 }

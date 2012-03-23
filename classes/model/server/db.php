@@ -10,23 +10,23 @@
 
 namespace OAuth2;
 
-class Model_Server_Db extends Model_Server
+class Model_Server_DB extends Model_Server
 {
-	const TABLE_CLIENT = 'applications';
-	const TABLE_SESSIONS = 'oauth2_sessions';
+	const TABLE_CLIENT = 'oauth_clients';
+	const TABLE_SESSIONS = 'oauth_sessions';
 	const TABLE_SESSION_SCOPES = 'oauth_session_scopes';
-	const TABLE_SCOPES = 'scopes';
+	const TABLE_SCOPES = 'oauth_scopes';
 
 	public function get_client(array $where)
 	{
-		$client = \DB::select('name', 'client_id', 'auto_approve')
+		$clients = \DB::select('name', 'client_id', 'auto_approve')
 			->from(static::TABLE_CLIENT)
 			->where($where)
 			->limit(1)
-			->execute()
-			->as_array();
+			->as_object()
+			->execute();
 						
-		return $client ? current($client) : false;
+		return isset($clients[0]) ? $clients[0] : false;
 	}
 
 	public function get_session(array $where)
@@ -35,10 +35,10 @@ class Model_Server_Db extends Model_Server
 			->from(static::TABLE_SESSIONS)
 			->where($where)
 			->limit(1)
-			->execute()
-			->as_array();
+			->as_object()
+			->execute();
 						
-		return $session ? current($session) : false;
+		return isset($session[0]) ? $session[0] : false;
 	}
 
 	public function get_token_from_session($session_id)
@@ -64,15 +64,15 @@ class Model_Server_Db extends Model_Server
 			->where('access_token', '!=', null)
 			->from(static::TABLE_SESSIONS)
 			->limit(1)
-			->as_array()
+			->as_object()
 			->execute();
 
-		return $tokens ? current($tokens->access_token) : false;
+		return isset($tokens[0]) ? $tokens[0]->access_token : false;
 	}
 
 	public function has_scope($access_token, $scope)
 	{
-		$has_any = \Db::select('id')
+		$has_any = \DB::select('id')
 			->where('access_token', $access_token)
 			->where('scope', $scope)
 			->from(static::TABLE_SESSION_SCOPES)
@@ -85,7 +85,7 @@ class Model_Server_Db extends Model_Server
 	public function new_session(array $values)
 	{
 		// Set the session values
-		$result = \Db::delete(static::TABLE_SESSION)
+		$result = \DB::insert(static::TABLE_SESSIONS)
 			->set($values)
 			->execute();
 
@@ -97,7 +97,7 @@ class Model_Server_Db extends Model_Server
 		{
 			if (trim($scope) !== "")
 			{
-				\Db::insert(static::TABLE_SESSION_SCOPES)
+				\DB::insert(static::TABLE_SESSION_SCOPES)
 					->set(array(
 						'session_id'	=>	$session_id,
 						'scope'			=>	$scope
@@ -108,7 +108,7 @@ class Model_Server_Db extends Model_Server
 
 	public function update_session(array $where, array $values)
 	{
-		return \Db::update(static::TABLE_SESSION)
+		return \DB::update(static::TABLE_SESSION)
 			->set($values)
 			->where($where)
 			->execute();
@@ -128,7 +128,7 @@ class Model_Server_Db extends Model_Server
 			'stage'			=>	'granted'
 		));
 
-		\Db::set('access_token', $access_token)
+		\DB::set('access_token', $access_token)
 			->where('session_id', $session_id)
 			->update(static::TABLE_SESSION_SCOPES)
 			->execute();
@@ -138,14 +138,9 @@ class Model_Server_Db extends Model_Server
 
 	public function delete_session(array $where)
 	{
-		return \Db::delete(static::TABLE_SESSION)
+		return \DB::delete(static::TABLE_SESSIONS)
 			->where($where)
 			->execute();
-	}
-
-	public function validate_user($username = "", $password = "")
-	{
-		exit('DO ME! '.__FUNCTION__.' L:'.__FILE__);
 	}
 
 	// Scopes
