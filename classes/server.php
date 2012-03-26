@@ -139,7 +139,7 @@ class Server {
 			'redirect_uri'	=> $redirect_uri, 
 			'code'			=> $code
 		));
-		
+
 		return $session ?: false;
 	}
 	
@@ -175,7 +175,7 @@ class Server {
 		// An access token doesn't exist yet so create one and remove the authorization code
 		else
 		{
-			$this->model->create_access_token($session_id);
+			return $this->model->create_access_token($session_id);
 		}
 	}
 		

@@ -48,10 +48,10 @@ class Model_Server_DB extends Model_Server
 			->where('access_token', '!=', null)
 			->from(static::TABLE_SESSIONS)
 			->limit(1)
-			->as_array()
+			->as_object()
 			->execute();
 
-		return $tokens ? current($tokens->access_token) : false;
+		return isset($tokens[0]) ? $tokens[0]->access_token : false;
 	}
 
 	public function has_user_authenicated_client($client_id, $user_id)
@@ -108,7 +108,7 @@ class Model_Server_DB extends Model_Server
 
 	public function update_session(array $where, array $values)
 	{
-		return \DB::update(static::TABLE_SESSION)
+		return \DB::update(static::TABLE_SESSIONS)
 			->set($values)
 			->where($where)
 			->execute();
@@ -119,7 +119,7 @@ class Model_Server_DB extends Model_Server
 		$access_token = sha1(time().uniqid());
 
 		// Update the OAuth session
-		$this->update_session(array(
+		$this->update_session(array(	
 			'id' => $session_id
 		), array(
 			'code'			=>	NULL,
@@ -128,9 +128,9 @@ class Model_Server_DB extends Model_Server
 			'stage'			=>	'granted'
 		));
 
-		\DB::set('access_token', $access_token)
+		\DB::update(static::TABLE_SESSION_SCOPES)
 			->where('session_id', $session_id)
-			->update(static::TABLE_SESSION_SCOPES)
+			->set(array('access_token' => $access_token))
 			->execute();
 
 		return $access_token;
