@@ -127,23 +127,13 @@ abstract class Provider {
 		$state = md5(uniqid(rand(), TRUE));
 		\Session::set('state', $state);
 		
-		$params = array(
+		$url = $this->url_authorize().'?'.http_build_query(array(
 			'client_id' 		=> $this->client_id,
-			'redirect_uri' 	=> \Arr::get($options, 'redirect_uri', $this->redirect_uri),
-			'state' 				=> $state,
+			'redirect_uri' 		=> \Arr::get($options, 'redirect_uri', $this->redirect_uri),
+			'state' 			=> $state,
 			'scope'     		=> is_array($this->scope) ? implode($this->scope_seperator, $this->scope) : $this->scope,
 			'response_type' 	=> 'code',
-		);
-		
-		//thanks google. you're awesome. both are required to get a refresh_token
-		switch ($this->name)
-		{
-			case 'google':
-				$params += array('access_type' => 'offline', 'approval_prompt'=>'force');
-				break;
-		}
-		
-		$url = $this->url_authorize().'?'.http_build_query($params);
+		));
 		
 		\Response::redirect($url);
 	}
@@ -248,8 +238,16 @@ abstract class Provider {
 			throw new Exception($return);
 		}
 		
-		return Token::forge('access', $return);
-		
+		switch ($params['grant_type'])
+		{
+			case 'authorization_code':
+				return Token::forge('access', $return);
+			break;
+
+			case 'refresh_token':
+				return Token::forge('refresh', $return);
+			break;
+		}
 	}
 
 }
