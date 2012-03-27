@@ -1,11 +1,11 @@
 <?php
 /**
  * OAuth2 Token
- *
- * @package    OAuth2
+ * 
+ * @package    FuelPHP/OAuth2
  * @category   Token
  * @author     Phil Sturgeon
- * @copyright  (c) 2011 HappyNinjas Ltd
+ * @copyright  (c) 2012 HappyNinjas Ltd
  */
 
 namespace OAuth2;
