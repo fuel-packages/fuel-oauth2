@@ -7,6 +7,8 @@
  * @author     Phil Sturgeon
  * @copyright  (c) 2012 HappyNinjas Ltd
  */
+ 
+namespace OAuth2;
 
 class Token_Authorize extends Token
 {
