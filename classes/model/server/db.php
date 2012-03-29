@@ -82,7 +82,7 @@ class Model_Server_DB extends Model_Server
 		return (bool) $has_any;
 	}
 
-	public function new_session(array $values)
+	public function new_session(array $values, array $scopes)
 	{
 		// Set the session values
 		$result = \DB::insert(static::TABLE_SESSIONS)

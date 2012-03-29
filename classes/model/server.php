@@ -15,7 +15,7 @@ abstract class Model_Server
 	abstract public function get_client(array $where);
 
 	abstract public function get_session(array $where);
-	abstract public function new_session(array $values);
+	abstract public function new_session(array $values, array $scopes);
 	abstract public function update_session(array $where, array $values);
 	abstract public function delete_session(array $where);
 

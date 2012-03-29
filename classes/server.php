@@ -53,7 +53,7 @@ class Server {
 		}
 	
 		// find the client using the parameters
-		if ($client = $this->model->get_client($params))
+		if (($client = $this->model->get_client($params)))
 		{
 			return $client;
 		}

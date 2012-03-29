@@ -17,6 +17,7 @@ Autoloader::add_classes(array(
 
 	'OAuth2\\Model_Server'  		=> __DIR__.'/classes/model/server.php',
 	'OAuth2\\Model_Server_Db'  		=> __DIR__.'/classes/model/server/db.php',
+	'OAuth2\\Model_Server_Mongo'  	=> __DIR__.'/classes/model/server/mongo.php',
 
 	'OAuth2\\Provider'  			=> __DIR__.'/classes/provider.php',
 	'OAuth2\\Provider_Facebook'  	=> __DIR__.'/classes/provider/facebook.php',
