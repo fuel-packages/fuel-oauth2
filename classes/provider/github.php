@@ -1,11 +1,18 @@
 <?php
+/**
+ * GitHub OAuth2 Provider
+ *
+ * @package    FuelPHP/OAuth2
+ * @category   Provider
+ * @author     Phil Sturgeon
+ * @copyright  (c) 2012 HappyNinjas Ltd
+ * @license    http://philsturgeon.co.uk/code/dbad-license
+ */
 
 namespace OAuth2;
 
-class Provider_Github extends Provider {  
-	
-	public $name = 'github';
-
+class Provider_Github extends Provider
+{
 	public function url_authorize()
 	{
 		return 'https://github.com/login/oauth/authorize';
@@ -16,7 +23,7 @@ class Provider_Github extends Provider {
 		return 'https://github.com/login/oauth/access_token';
 	}
 
-	public function get_user_info(Token $token)
+	public function get_user_info(Token_Access $token)
 	{
 		$url = 'https://api.github.com/user?'.http_build_query(array(
 			'access_token' => $token->access_token,

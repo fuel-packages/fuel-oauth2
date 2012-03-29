@@ -38,11 +38,6 @@ abstract class Provider {
 	 * @var  string  uid key name
 	 */
 	public $uid_key = 'uid';
-	
-	/**
-	 * @var  string  scope separator, most use "," but some like Google are spaces
-	 */
-	public $scope_seperator = ',';
 
 	/**
 	 * @var  string  additional request parameters to be used for remote requests
@@ -58,6 +53,16 @@ abstract class Provider {
 	 * @var  string  the method to use when requesting tokens
 	 */
 	protected $method = 'GET';
+
+	/**
+	 * @var  string  default scope (useful if a scope is required for user info)
+	 */
+	protected $scope;
+
+	/**
+	 * @var  string  scope separator, most use "," but some like Google are spaces
+	 */
+	protected $scope_seperator = ',';
 
 	/**
 	 * Overloads default class properties from the options.

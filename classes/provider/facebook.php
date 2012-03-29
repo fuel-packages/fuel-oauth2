@@ -1,14 +1,20 @@
+
 <?php
+/**
+ * Facebook OAuth2 Provider
+ *
+ * @package    FuelPHP/OAuth2
+ * @category   Provider
+ * @author     Phil Sturgeon
+ * @copyright  (c) 2012 HappyNinjas Ltd
+ * @license    http://philsturgeon.co.uk/code/dbad-license
+ */
 
 namespace OAuth2;
 
-class Provider_Facebook extends Provider {  
-	
-	public $name = 'facebook';
-
-	public $uid_key = 'uid';
-	
-	public $scope = array('email', 'read_stream');
+class Provider_Facebook extends Provider
+{  
+	public $scope = array('offline_access', 'email', 'read_stream');
 
 	public function url_authorize()
 	{
@@ -20,7 +26,7 @@ class Provider_Facebook extends Provider {
 		return 'https://graph.facebook.com/oauth/access_token';
 	}
 
-	public function get_user_info(Token $token)
+	public function get_user_info(Token_Access $token)
 	{
 		$url = 'https://graph.facebook.com/me?'.http_build_query(array(
 			'access_token' => $token->access_token,

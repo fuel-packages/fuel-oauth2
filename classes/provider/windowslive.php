@@ -4,10 +4,6 @@ namespace OAuth2;
 
 class Provider_Windowslive extends Provider
 {
-	public $name = 'windowslive';
-	
-	public $uid_key = 'uid';
-	
 	public function __construct(array $options = array())
 	{
 		// Now make sure we have the default scope to get user data
@@ -43,11 +39,11 @@ class Provider_Windowslive extends Provider
 	** use of scopes, check out the document at
 	** http://msdn.microsoft.com/en-gb/library/hh243648.aspx#user
 	*********************************/
-	public function get_user_info($token)
+	public function get_user_info(Token_Access $token)
 	{
 		// define the get user information token
 		$url = 'https://apis.live.net/v5.0/me?'.http_build_query(array(
-			'access_token' => $token,
+			'access_token' => $token->access_token,
 		));
 		
 		// perform network request

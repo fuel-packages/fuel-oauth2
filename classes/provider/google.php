@@ -1,15 +1,25 @@
 <?php
-
+/**
+ * Google OAuth2 Provider
+ *
+ * @package    FuelPHP/OAuth2
+ * @category   Provider
+ * @author     Phil Sturgeon
+ * @copyright  (c) 2012 HappyNinjas Ltd
+ * @license    http://philsturgeon.co.uk/code/dbad-license
+ */
 namespace OAuth2;
 
-class Provider_Google extends Provider {  
-	
-	public $name = 'google';
-
-	public $uid_key = 'uid';
-	
+class Provider_Google extends Provider
+{
+	/**
+	 * @var  string  the method to use when requesting tokens
+	 */
 	public $method = 'POST';
 
+	/**
+	 * @var  string  scope separator, most use "," but some like Google are spaces
+	 */
 	public $scope_seperator = ' ';
 
 	public function url_authorize()
@@ -74,7 +84,7 @@ class Provider_Google extends Provider {
 		return parent::access($code, $options);
 	}
 
-	public function get_user_info(Token $token)
+	public function get_user_info(Token_Access $token)
 	{
 		$url = 'https://www.google.com/m8/feeds/contacts/default/full?max-results=1&alt=json&'.http_build_query(array(
 			'access_token' => $token->access_token,
