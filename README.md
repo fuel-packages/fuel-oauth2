@@ -35,7 +35,7 @@ Here you'll see we have the provider passed in as a URI segment of "facebook" wh
 Send your user to `http://example.com/auth/session/facebook` where Auth is the name of the controller. This will also be the address of the "Callback URL" which will be required by many OAuth 2 providers such as Facebook.
 
 ```php
-class Auth extends CI_Controller
+class Auth extends Controller
 {
   public function action_session($provider)
   {	
