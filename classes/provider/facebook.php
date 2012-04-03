@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Facebook OAuth2 Provider
