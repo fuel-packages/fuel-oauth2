@@ -30,19 +30,23 @@ class Model_Server_Mongo extends Model_Server
 	}
 
 	public function get_client(array $where)
-	{
-		return (object) $this->mongo
+	{	
+		$client = $this->mongo
 			->select(array('name', 'client_id', 'auto_approve'))
 			->where($where)
 			->get_one(static::COLLECTION_CLIENT);
+
+		return $client ? (object) $client : false;
 	}
 
 	public function get_session(array $where)
 	{					
-		return (object) $this->mongo
+		$session = $this->mongo
 			->select(array('id', 'type_id'))
 			->where($where)
 			->get_one(static::COLLECTION_SESSIONS);
+
+		return $session ? (object) $session : false;
 	}
 
 	public function get_token_from_session($session_id)
