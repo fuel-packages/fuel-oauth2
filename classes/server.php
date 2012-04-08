@@ -109,14 +109,14 @@ class Server {
 			$code = md5(time().uniqid());
 			
 			$this->model->new_session(array(
-				'client_id'		=>	$client_id,
-				'redirect_uri'	=>	$redirect_uri,
-				'type_id'		=>	$user_id,
-				'type'			=>	'user',
-				'code'			=>	$code,
+				'client_id'			=> $client_id,
+				'redirect_uri'		=> $redirect_uri,
+				'type_id'			=> $user_id,
+				'type'				=> 'user',
+				'code'				=> $code,
 				'first_requested'	=> time(),
-				'last_updated'	=>	time(),
-				'access_token'	=>	NULL
+				'last_updated'		=> time(),
+				'access_token'		=> NULL,
 			), $scopes);
 		}
 		
