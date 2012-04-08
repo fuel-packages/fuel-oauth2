@@ -36,9 +36,9 @@ class Provider_Facebook extends Provider
 		// Create a response from the request
 		return array(
 			'uid' => $user->id,
-			'nickname' => $user->username,
 			'name' => $user->name,
-			'email' => $user->email,
+			'nickname' => isset($user->username) ? $user->username : null,
+			'email' => isset($user->email) ? $user->email : null,
 			'image' => 'https://graph.facebook.com/me/picture?type=normal&access_token='.$token->access_token,
 			'urls' => array(
 			  'Facebook' => $user->link,
