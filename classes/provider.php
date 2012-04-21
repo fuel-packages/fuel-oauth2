@@ -243,16 +243,9 @@ abstract class Provider {
 			throw new Exception($return);
 		}
 		
-		switch ($params['grant_type'])
-		{
-			case 'authorization_code':
-				return Token::forge('access', $return);
-			break;
 
-			case 'refresh_token':
-				return Token::forge('refresh', $return);
-			break;
-		}
+		return Token::forge('access', $return);
+
 	}
 
 }
