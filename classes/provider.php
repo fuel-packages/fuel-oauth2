@@ -1,4 +1,11 @@
 <?php
+
+namespace OAuth2;
+
+use Inflector;
+use Response;
+use Session;
+
 /**
  * OAuth Provider
  *
@@ -8,11 +15,8 @@
  * @copyright  (c) 2012 HappyNinjas Ltd
  * @license    http://philsturgeon.co.uk/code/dbad-license
  */
-
-namespace OAuth2;
-
-abstract class Provider {
-
+abstract class Provider
+{
 	/**
 	 * Create a new provider.
 	 *
@@ -25,7 +29,7 @@ abstract class Provider {
 	 */
 	public static function forge($name, array $options = null)
 	{	
-		$class = 'OAuth2\\Provider_'.\Inflector::classify($name);
+		$class = 'OAuth2\\Provider_'.Inflector::classify($name);
 		return new $class($options);
 	}
 
@@ -130,7 +134,7 @@ abstract class Provider {
 	public function authorize($options = array())
 	{
 		$state = md5(uniqid(rand(), TRUE));
-		\Session::set('state', $state);
+		Session::set('state', $state);
 		
 		$url = $this->url_authorize().'?'.http_build_query(array(
 			'client_id' 		=> $this->client_id,
@@ -140,7 +144,7 @@ abstract class Provider {
 			'response_type' 	=> 'code',
 		));
 		
-		\Response::redirect($url);
+		Response::redirect($url);
 	}
 
 	/*
