@@ -32,7 +32,7 @@ class Model_Server_Mongo extends Model_Server
 	public function get_client(array $where)
 	{	
 		$client = $this->mongo
-			->select(array('name', 'client_id', 'auto_approve'))
+			->select(array('name', 'client_id', 'auto_approve', 'redirect_uri'))
 			->where($where)
 			->get_one(static::COLLECTION_CLIENT);
 

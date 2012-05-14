@@ -36,7 +36,7 @@ class Server {
 	 * @param mixed $redirect_uri
 	 * @return bool|object
 	 */
-	public function validate_client($client_id = "", $client_secret = NULL, $redirect_uri = NULL)
+	public function validate_client($client_id, $client_secret = NULL, $redirect_uri = NULL)
 	{
 		$params = array(
 			'client_id' => $client_id,
@@ -46,19 +46,18 @@ class Server {
 		{
 			$params['client_secret'] = $client_secret;
 		}
-		
-		if ($redirect_uri !== NULL)
-		{
-			$params['redirect_uri'] = $redirect_uri;
-		}
 	
 		// find the client using the parameters
-		if (($client = $this->model->get_client($params)))
+		if ( ! ($client = $this->model->get_client($params)))
 		{
-			return $client;
+			return false;
 		}
 
-		return false;
+		$given_domain = parse_url($redirect_uri, PHP_URL_HOST);
+		$stored_domain = parse_url($client->redirect_uri, PHP_URL_HOST);
+
+		// Does the host name match a valid URL?
+		return ($given_domain === $stored_domain) ? $client : false;
 	}
 	
 	/**************************************************************

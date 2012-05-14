@@ -19,7 +19,7 @@ class Model_Server_DB extends Model_Server
 
 	public function get_client(array $where)
 	{
-		$clients = \DB::select('name', 'client_id', 'auto_approve')
+		$clients = \DB::select('name', 'client_id', 'auto_approve', 'redirect_uri')
 			->from(static::TABLE_CLIENT)
 			->where($where)
 			->limit(1)
