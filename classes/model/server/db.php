@@ -54,7 +54,7 @@ class Model_Server_DB extends Model_Server
 		return isset($tokens[0]) ? $tokens[0]->access_token : false;
 	}
 
-	public function has_user_authenicated_client($client_id, $user_id)
+	public function has_user_authenicated_client($user_id, $client_id)
 	{
 		$tokens = \DB::select('access_token')
 			->where('client_id', $client_id)

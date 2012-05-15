@@ -60,13 +60,13 @@ class Model_Server_Mongo extends Model_Server
 		return isset($token->access_token) ? $token->access_token : false;
 	}
 
-	public function has_user_authenicated_client($client_id, $user_id)
+	public function has_user_authenicated_client($user_id, $client_id)
 	{
 		$token = (object) $this->mongo
 			->select(array('access_token'))
 			->where(array(
-				'client_id' => $client_id,
-				'type_id' => $user_id,
+				'client_id' => (string) $client_id,
+				'type_id' => (string) $user_id,
 				'type' => 'user',
 			))
 			->where_ne('access_token', null)

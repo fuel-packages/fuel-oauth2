@@ -21,6 +21,6 @@ abstract class Model_Server
 
 	abstract public function get_token_from_session($session_id);
 	abstract public function create_access_token($session_id);
-	abstract public function has_user_authenicated_client($client_id, $user_id);
+	abstract public function has_user_authenicated_client($user_id, $client_id);
 	abstract public function has_scope($access_token, $scope);
 }
