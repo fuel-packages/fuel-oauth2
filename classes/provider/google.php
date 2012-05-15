@@ -108,4 +108,18 @@ class Provider_Google extends Provider
 			'urls' => array(),
 		);
 	}
+	
+	public function get_user_contacts(Token_Access $token){
+		$url = 'https://www.google.com/m8/feeds/contacts/default/full?alt=json&'.http_build_query(array(
+			'access_token' => $token->access_token,
+		));
+		
+		$response = json_decode(file_get_contents($url), true);
+		$emails = array();
+		foreach( \Arr::get($response, 'feed.entry') as $entry){
+			$emails[] = array( 'name'=>\Arr::get($entry, 'title.$t') ,'emails' => \Arr::get($entry, 'gd$email') );
+		}
+		
+		return $emails;
+	}
 }
