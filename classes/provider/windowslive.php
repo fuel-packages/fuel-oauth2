@@ -4,6 +4,8 @@ namespace OAuth2;
 
 class Provider_Windowslive extends Provider
 {
+	protected $method = 'POST';
+	
 	public function __construct(array $options = array())
 	{
 		// Now make sure we have the default scope to get user data
