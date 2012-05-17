@@ -46,7 +46,15 @@ class Model_Server_Mongo extends Model_Server
 			->where($where)
 			->get_one(static::COLLECTION_SESSIONS);
 
-		return $session ? (object) $session : false;
+		if ( ! $session)
+		{
+			return false;
+		}
+		
+		$session = (object) $session;
+		$session->id = $session->_id;
+
+		return $session;
 	}
 
 	public function get_token_from_session($session_id)
@@ -106,7 +114,7 @@ class Model_Server_Mongo extends Model_Server
 
 		// Update the OAuth session
 		$this->update_session(array(	
-			'id' 			=> $session_id
+			'_id' 			=> $session_id
 		), array(
 			'code'			=> null,
 			'access_token'	=> $access_token,

@@ -73,7 +73,7 @@ class Server {
 	 * @param array $scopes
 	 * @return string
 	 */
-	public function new_auth_code($client_id = '', $user_id = '', $redirect_uri = '', $scopes = array(), $access_token = NULL)
+	public function new_auth_code($client_id = '', $user_id = '', $redirect_uri = '', $scopes = array(), $access_token = null)
 	{
 		// Update an existing session with the new code
 		if ($access_token)
@@ -133,13 +133,11 @@ class Server {
 	 */
 	public function validate_auth_code($code = '', $client_id = '', $redirect_uri = '')
 	{
-		$session = $this->model->get_session(array(
+		return $this->model->get_session(array(
 			'client_id'		=> $client_id,
 			'redirect_uri'	=> $redirect_uri, 
 			'code'			=> $code
-		));
-
-		return $session ?: false;
+		)) ?: false;
 	}
 	
 	/**************************************************************
@@ -148,10 +146,10 @@ class Server {
 	/**
 	 * Generates a new access token (or returns an existing one)
 	 * 
-	 * @param string $session_id. (default: '')
+	 * @param string $session_id
 	 * @return string
 	 */
-	public function get_access_token($session_id = '')
+	public function get_access_token($session_id)
 	{
 		// Check if an access token exists already
 		$token = $this->model->get_token_from_session($session_id);
@@ -163,7 +161,7 @@ class Server {
 			$this->model->update_session(array(
 				'id' => $session_id
 			), array(
-				'code'	=>	NULL,
+				'code'	=>	null,
 				'stage'	=>	'granted'
 			));
 			
@@ -181,21 +179,21 @@ class Server {
 	/**
 	 * Validates an access token
 	 * 
-	 * @param string $access_token. (default: "")
+	 * @param string $access_token
 	 * @param array $scope. (default: array())
 	 * @return void
 	 */
-	public function validate_access_token($access_token = '', $scopes = array())
+	public function validate_access_token($access_token, $scopes = array())
 	{
 		// Validate the token exists
-		$token = $this->model->get_session(array(
+		$session_id = $this->model->get_session(array(
 			'access_token'	=>	$access_token
 		));
 		
 		// The access token doesn't exists
-		if ( ! $token)
+		if ( ! $session_id)
 		{
-			return FALSE;
+			return false;
 		}
 
 		// The access token does exist, validate each scope
@@ -205,12 +203,12 @@ class Server {
 			{
 				if ( ! $this->model->has_scope($access_token, $scope))
 				{
-					return FALSE;
+					return false;
 				}
 			}
 		}
 		
-		return TRUE;
+		return true;
 	}	
 	
 	/**
@@ -220,7 +218,7 @@ class Server {
 	 * @param string $client_id
 	 * @return bool
 	 */
-	public function access_token_exists($user_id = '', $client_id = '')
+	public function access_token_exists($user_id, $client_id)
 	{
 		return $this->model->has_user_authenicated_client($user_id, $client_id);
 	}
