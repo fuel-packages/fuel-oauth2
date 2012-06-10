@@ -136,15 +136,13 @@ abstract class Provider
 		$state = md5(uniqid(rand(), TRUE));
 		Session::set('state', $state);
 		
-		$url = $this->url_authorize().'?'.http_build_query(array(
+		return $this->url_authorize().'?'.http_build_query(array(
 			'client_id' 		=> $this->client_id,
 			'redirect_uri' 		=> \Arr::get($options, 'redirect_uri', $this->redirect_uri),
 			'state' 			=> $state,
 			'scope'     		=> is_array($this->scope) ? implode($this->scope_seperator, $this->scope) : $this->scope,
 			'response_type' 	=> 'code',
 		));
-		
-		Response::redirect($url);
 	}
 
 	/*
