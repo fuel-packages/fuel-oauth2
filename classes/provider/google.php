@@ -36,7 +36,7 @@ class Provider_Google extends Provider
 	{
 		$state = md5(uniqid(rand(), TRUE));
 		\Session::set('state', $state);
-		
+
 		$params = array(
 			'client_id' 		=> $this->client_id,
 			'redirect_uri' 	=> \Arr::get($options, 'redirect_uri', $this->redirect_uri),
@@ -48,7 +48,7 @@ class Provider_Google extends Provider
 		);
 
 		$url = $this->url_authorize().'?'.http_build_query($params);
-		
+
 		\Response::redirect($url);
 	}
 
@@ -56,15 +56,17 @@ class Provider_Google extends Provider
 	{
 		// Now make sure we have the default scope to get user data
 		$options['scope'] = \Arr::merge(
-			
+
 			// We need this default feed to get the authenticated users basic information
-			// array('https://www.googleapis.com/auth/plus.me'),
-			array('https://www.google.com/m8/feeds'),
-			
+			array(
+				'https://www.googleapis.com/auth/userinfo.profile',
+				'https://www.googleapis.com/auth/userinfo.email'
+			),
+
 			// And take either a string and array it, or empty array to merge into
 			(array) \Arr::get($options, 'scope', array())
 		);
-		
+
 		parent::__construct($options);
 	}
 
@@ -73,7 +75,7 @@ class Provider_Google extends Provider
 	*
 	* @param	string	The access code
 	* @return	object	Success or failure along with the response details
-	*/	
+	*/
 	public function access($code, $options = array())
 	{
 		if ($code === null)
@@ -86,24 +88,26 @@ class Provider_Google extends Provider
 
 	public function get_user_info(Token_Access $token)
 	{
-		$url = 'https://www.google.com/m8/feeds/contacts/default/full?max-results=1&alt=json&'.http_build_query(array(
+
+		$url = 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&max-results=1&'.http_build_query(array(
 			'access_token' => $token->access_token,
 		));
-		
+
 		$response = json_decode(file_get_contents($url), true);
-		
+
 		// Fetch data parts
-		$email = \Arr::get($response, 'feed.id.$t');
-		$name = \Arr::get($response, 'feed.author.0.name.$t');
+		$uid = \Arr::get($response, 'id');
+		$email = \Arr::get($response, 'email');
+		$name = \Arr::get($response, 'name');
 		$name == '(unknown)' and $name = $email;
-		
+
 		return array(
-			'uid' => $email,
+			'uid' => $uid,
 			'nickname' => \Inflector::friendly_title($name),
 			'name' => $name,
 			'email' => $email,
 			'location' => null,
-			'image' => null,
+			'image' => \Arr::get($response, 'picture'),
 			'description' => null,
 			'urls' => array(),
 		);
