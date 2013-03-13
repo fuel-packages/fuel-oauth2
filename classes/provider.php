@@ -84,7 +84,7 @@ abstract class Provider
 			$this->name = strtolower(substr(get_class($this), strlen('OAuth2\\Provider_')));
 		}
 		
-		if ( ! $this->client_id = \Arr::get($options, 'id'))
+		if ( ! $this->client_id = \Arr::get($options, 'client_id'))
 		{
 			throw new Exception(array('message' => 'Required option not provided: id'));
 		}
