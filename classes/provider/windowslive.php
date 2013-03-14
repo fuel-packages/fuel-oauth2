@@ -55,7 +55,7 @@ class Provider_Windowslive extends Provider
 		return array(
 			'uid' 			=> $user->id,
 			'name' 			=> $user->name,
-			'emial'			=> isset($user->emails->preferred) ? $user->emails->preferred : null,
+			'email'			=> isset($user->emails->preferred) ? $user->emails->preferred : null,
 			'nickname' 		=> \Inflector::friendly_title($user->name, '-', true),
 			// 'location' 	=> $user->location,
 			// 	requires scope wl.postal_addresses and docs here: http://msdn.microsoft.com/en-us/library/hh243648.aspx#user
