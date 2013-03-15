@@ -58,7 +58,7 @@ class Provider_Google extends Provider
 		$options['scope'] = \Arr::merge(
 			
 			// We need this default feed to get the authenticated users basic information
-			// array('https://www.googleapis.com/auth/plus.me'),
+			//array('https://www.googleapis.com/auth/plus.me'),
 			array('https://www.google.com/m8/feeds'),
 			
 			// And take either a string and array it, or empty array to merge into
