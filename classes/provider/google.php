@@ -43,8 +43,8 @@ class Provider_Google extends Provider
 			'state' 				=> $state,
 			'scope'     		=> is_array($this->scope) ? implode($this->scope_seperator, $this->scope) : $this->scope,
 			'response_type' 	=> 'code',
-			'access_type'	=> 'offline',
-			'approval_prompt'	=>'force',
+			'access_type'	=> 'online',
+			'approval_prompt'	=>'auto',
 		);
 
 		$url = $this->url_authorize().'?'.http_build_query($params);
