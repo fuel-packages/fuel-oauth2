@@ -39,7 +39,7 @@ class Provider_Facebook extends Provider
 			'name' => $user->name,
 			'nickname' => isset($user->username) ? $user->username : null,
 			'email' => isset($user->email) ? $user->email : null,
-			'image' => 'https://graph.facebook.com/me/picture?type=normal&access_token='.$token->access_token,
+			'image' => 'https://graph.facebook.com/'.$user->username.'/picture?type=normal',
 			'urls' => array(
 			  'Facebook' => $user->link,
 			),
