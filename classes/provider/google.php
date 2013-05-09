@@ -60,6 +60,7 @@ class Provider_Google extends Provider
 			// We need this default feed to get the authenticated users basic information
 			//array('https://www.googleapis.com/auth/plus.me'),
 			//array('https://www.google.com/m8/feeds'),
+			array('profile', 'email'),
 			
 			// And take either a string and array it, or empty array to merge into
 			(array) \Arr::get($options, 'scope', array())
