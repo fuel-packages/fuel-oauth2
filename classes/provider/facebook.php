@@ -13,7 +13,7 @@ namespace OAuth2;
 
 class Provider_Facebook extends Provider
 {  
-	public $scope = array('offline_access', 'email', 'read_stream');
+	public $scope = array('email');
 
 	public function url_authorize()
 	{
