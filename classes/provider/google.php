@@ -43,8 +43,8 @@ class Provider_Google extends Provider
 			'state' 				=> $state,
 			'scope'     		=> is_array($this->scope) ? implode($this->scope_seperator, $this->scope) : $this->scope,
 			'response_type' 	=> 'code',
-			'access_type'	=> 'offline',
-			'approval_prompt'	=>'force',
+			'access_type'	=> 'online',
+			'approval_prompt'	=>'auto',
 		);
 
 		$url = $this->url_authorize().'?'.http_build_query($params);
@@ -59,7 +59,8 @@ class Provider_Google extends Provider
 			
 			// We need this default feed to get the authenticated users basic information
 			//array('https://www.googleapis.com/auth/plus.me'),
-			array('https://www.google.com/m8/feeds'),
+			//array('https://www.google.com/m8/feeds'),
+			array('profile', 'email'),
 			
 			// And take either a string and array it, or empty array to merge into
 			(array) \Arr::get($options, 'scope', array())
@@ -86,15 +87,17 @@ class Provider_Google extends Provider
 
 	public function get_user_info(Token_Access $token)
 	{
-		$url = 'https://www.google.com/m8/feeds/contacts/default/full?max-results=1&alt=json&'.http_build_query(array(
+		$url = 'https://www.googleapis.com/oauth2/v3/userinfo?max-results=1&alt=json&'.http_build_query(array(
 			'access_token' => $token->access_token,
 		));
 		
 		$response = json_decode(file_get_contents($url), true);
+
+		print_r($response);
 		
 		// Fetch data parts
-		$email = \Arr::get($response, 'feed.id.$t');
-		$name = \Arr::get($response, 'feed.author.0.name.$t');
+		$email = $response['email'];
+		$name = $response['name'];
 		$name == '(unknown)' and $name = $email;
 		
 		return array(
@@ -103,7 +106,7 @@ class Provider_Google extends Provider
 			'name' => $name,
 			'email' => $email,
 			'location' => null,
-			'image' => null,
+			'image' => $response['picture'],
 			'description' => null,
 			'urls' => array(),
 		);
