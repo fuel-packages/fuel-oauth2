@@ -84,7 +84,7 @@ abstract class Provider
 			$this->name = strtolower(substr(get_class($this), strlen('OAuth2\\Provider_')));
 		}
 		
-		if ( ! $this->client_id = \Arr::get($options, 'id'))
+		if ( ! $this->client_id = \Arr::get($options, 'client_id'))
 		{
 			throw new Exception(array('message' => 'Required option not provided: id'));
 		}
@@ -136,13 +136,15 @@ abstract class Provider
 		$state = md5(uniqid(rand(), TRUE));
 		Session::set('state', $state);
 		
-		return $this->url_authorize().'?'.http_build_query(array(
+		$url = $this->url_authorize().'?'.http_build_query(array(
 			'client_id' 		=> $this->client_id,
 			'redirect_uri' 		=> \Arr::get($options, 'redirect_uri', $this->redirect_uri),
 			'state' 			=> $state,
 			'scope'     		=> is_array($this->scope) ? implode($this->scope_seperator, $this->scope) : $this->scope,
 			'response_type' 	=> 'code',
 		));
+
+		\Response::redirect($url);
 	}
 
 	/*
@@ -195,6 +197,7 @@ abstract class Provider
 			case 'POST':
 				
 				$postdata = http_build_query($params);
+
 				$opts = array(
 					'http' => array(
 						'method'  => 'POST',
@@ -203,6 +206,7 @@ abstract class Provider
 					)
 				);
 				$context  = stream_context_create($opts);
+
 				$response = file_get_contents($url, false, $context);
 
 				$return = get_object_vars(json_decode($response));

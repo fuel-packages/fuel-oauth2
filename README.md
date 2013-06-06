@@ -39,7 +39,7 @@ class Auth extends Controller
 {
   public function action_session($provider)
   {	
-  	$provider = OAuth2\Provider::factory($provider, array(
+  	$provider = OAuth2\Provider::forge($provider, array(
   		'client_id' => 'your-client-id',
   		'client_secret' => 'your-client-secret',
   	));
