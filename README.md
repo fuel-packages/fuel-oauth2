@@ -39,9 +39,9 @@ class Auth extends Controller
 {
   public function action_session($provider)
   {	
-  	$provider = OAuth2\Provider::factory($provider, array(
-  		'client_id' => 'your-client-id',
-  		'client_secret' => 'your-client-secret',
+  	$provider = OAuth2\Provider::forge($provider, array(
+  		'id' => 'your-client-id',
+  		'secret' => 'your-client-secret',
   	));
 
   	if ( ! isset($_GET['code']))
